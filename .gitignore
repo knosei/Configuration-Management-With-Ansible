@@ -1,0 +1,17 @@
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+terraform/crash.log
+terraform/crash.*.log
+
+# SSH keys (just in case one ends up in the project folder)
+*.pem
+id_rsa
+id_rsa.pub
+
+# Ansible
+ansible/*.retry
+ansible/inventory.ini
