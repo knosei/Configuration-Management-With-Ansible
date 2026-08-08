@@ -16,3 +16,10 @@
         name: nginx
         state: started
         enabled: yes
+    - name: Deploy application
+      copy:
+        src: ../files/index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: "0644"
