@@ -2,7 +2,7 @@
 
 Automated AWS infrastructure provisioning and server configuration management using **Terraform** and **Ansible**.
 
-## Overview
+## Project Overview
 
 CloudNova, a growing SaaS company, was facing operational issues from manually configuring backend EC2 servers — inconsistent setups, error-prone updates, and no repeatable process across environments.
 
@@ -15,23 +15,7 @@ The focus is on configuration management fundamentals: a single control node man
 
 ## Architecture
 
-```
-Local Machine (Control Node)
-    │
-    ├── Terraform ──► AWS (provisions infrastructure)
-    │                     │
-    │                     ├── Security Group (SSH :22, HTTP :80)
-    │                     ├── SSH Key Pair
-    │                     └── 2x EC2 Instances (Ubuntu 22.04, t2.micro)
-    │
-    └── Ansible ──► SSH ──► EC2 Instances (managed nodes)
-                              ├── Installs & starts Nginx
-                              └── Deploys web application
-```
-
-- **Terraform** is used only for infrastructure — no software installation.
-- **Ansible** is used only for configuration and deployment — no infrastructure changes.
-- No Ansible agent runs on the EC2 instances; everything is agentless over SSH.
+![Architecture Diagram](public/architecture.png)
 
 ## Tech Stack
 
@@ -44,16 +28,6 @@ Local Machine (Control Node)
 | Ansible | Configuration management & deployment |
 | AWS IAM | Authentication and permissions |
 | Nginx | Web server on managed nodes |
-
-## Prerequisites
-
-- AWS account with permissions to create EC2 instances, security groups, and key pairs (Free Tier is sufficient)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed and configured (`aws configure`)
-- [Terraform](https://developer.hashicorp.com/terraform/downloads) v1.x+
-- [Ansible](https://docs.ansible.com/projects/ansible/latest/installation_guide/installation_distros.html) installed on your control node
-- An SSH key pair (`ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa`)
-
-> **Note (WSL/Windows users):** Run Terraform and Ansible from the **same environment** as your SSH key was generated in (e.g. WSL). Mixing Windows paths (`C:\Users\...`) with a WSL-generated key (`/home/<user>/.ssh/...`) will cause Terraform's `file()` function to fail — keep everything in one filesystem.
 
 ## Project Structure
 
@@ -73,7 +47,16 @@ ansible-aws-config-management/
 └── README.md
 ```
 
-## Setup & Usage
+## Deployment
+### Prerequisites
+
+- AWS account with permissions to create EC2 instances, security groups, and key pairs (Free Tier is sufficient)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed and configured (`aws configure`)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) v1.x+
+- [Ansible](https://docs.ansible.com/projects/ansible/latest/installation_guide/installation_distros.html) installed on your control node
+- An SSH key pair (`ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa`)
+
+> **Note (WSL/Windows users):** Run Terraform and Ansible from the **same environment** as your SSH key was generated in (e.g. WSL).
 
 ### 1. Provision infrastructure with Terraform
 
@@ -163,7 +146,7 @@ Every task reports `ok` instead of `changed` — Ansible checks the current stat
 - **Idempotency** — repeated runs converge to the same state without unintended side effects
 - **Separation of concerns** — Terraform owns infrastructure, Ansible owns configuration; neither does the other's job
 
-## Lessons Learned / Troubleshooting Notes
+## Lessons Learned
 
 - **Cross-filesystem path mismatches** (Windows vs WSL) caused Terraform's `file(var.public_key_path)` to fail — resolved by running Terraform, Ansible, and the SSH key generation from the same environment (WSL).
 - **Missing default VPC** blocked security group creation — recreated via the AWS Console rather than hand-rolling custom VPC resources, keeping scope aligned with the project's configuration-management focus.
@@ -179,6 +162,16 @@ cd terraform
 terraform destroy
 ```
 
-## What's Excluded from Version Control
+## 🤝 Connect With Me
 
-See `.gitignore` — Terraform state (`*.tfstate`), the local provider cache (`.terraform/`), variable values (`*.tfvars`), and the Ansible inventory (`inventory.ini`) are all excluded, since they contain environment-specific values, changing IPs, and potentially sensitive data. `.tfvars.example` and `inventory.ini.example` are provided as templates instead.
+<p align="center">
+<a href="mailto:knokwaku99@gmail.com">
+<img src="https://img.shields.io/badge/EMAIL-KNOKWAKU99%40GMAIL.COM-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/>
+</a>
+
+<a href="https://www.linkedin.com/in/knosei/">
+<img src="https://img.shields.io/badge/LINKEDIN-KNOSEI%20-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
+</a>
+</p>
+
+---
