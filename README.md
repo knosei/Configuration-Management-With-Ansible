@@ -121,6 +121,8 @@ This playbook:
 3. Ensures the Nginx service is running and enabled on boot
 4. Deploys `files/index.html` to `/var/www/html/index.html`
 
+![serverconfig](public/serverconfig.png)
+
 ### 4. Verify
 
 Visit both public IPs in a browser:
