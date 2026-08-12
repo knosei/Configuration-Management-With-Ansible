@@ -17,6 +17,11 @@ The focus is on configuration management fundamentals: a single control node man
 
 ![Architecture Diagram](public/architecture.png)
 
+1. **Terraform** provisions EC2 infrastructure in AWS
+2. **Ansible** acts as the control node for configuration mangement
+3. Ansible connects to the **first EC2 instance** using SSH.
+4. Ansible connects to the **second EC2 instance** using SSH.
+
 ## Tech Stack
 
 | Tool | Purpose |
@@ -73,8 +78,7 @@ This creates:
 - Two EC2 instances running the latest Ubuntu 22.04 AMI (resolved automatically, no hardcoded AMI ID)
 
 Terraform outputs the public IPs of both instances, which feed directly into the Ansible inventory.
-
-> **If you hit `VPCIdNotSpecified: No default VPC for this user`:** your AWS account/region is missing a default VPC. Recreate one via VPC Console → Actions → Create default VPC, then re-run `terraform apply`.
+![Infrastructure](public/Infrastructure.png)
 
 ### 2. Build the Ansible inventory
 
@@ -127,6 +131,7 @@ http://<EC2_PUBLIC_IP_2>
 ```
 
 Both should serve the identical custom application page.
+![webpage](public/webpage.png)
 
 ### 5. Idempotency check
 
@@ -137,6 +142,7 @@ ansible-playbook -i inventory.ini playbooks/setup.yml
 ```
 
 Every task reports `ok` instead of `changed` — Ansible checks the current state before acting and only applies changes where the actual state differs from the desired state. This is what makes it safe to re-run in production (scheduled runs, drift correction, CI/CD) without side effects.
+![Idempotency](public/Idempotency.png)
 
 ## Key Concepts Demonstrated
 
